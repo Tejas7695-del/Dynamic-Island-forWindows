@@ -794,10 +794,10 @@ void OverlayWindow::Render() {
                 float barWidth = (right - 60.0f) - (left + 60.0f);
                 float filledWidth = barWidth * progress;
                 
-                D2D1_ROUNDED_RECT progBg = D2D1::RoundedRect(D2D1::RectF(left + 60, bottom - 45, right - 60, bottom - 41), 2.0f, 2.0f);
+                D2D1_ROUNDED_RECT progBg = D2D1::RoundedRect(D2D1::RectF(left + 60, bottom - 50, right - 60, bottom - 46), 2.0f, 2.0f);
                 m_d2dContext->FillRoundedRectangle(&progBg, m_bgDarkBrush.Get());
                 
-                D2D1_ROUNDED_RECT progFg = D2D1::RoundedRect(D2D1::RectF(left + 60, bottom - 45, left + 60 + filledWidth, bottom - 41), 2.0f, 2.0f);
+                D2D1_ROUNDED_RECT progFg = D2D1::RoundedRect(D2D1::RectF(left + 60, bottom - 50, left + 60 + filledWidth, bottom - 46), 2.0f, 2.0f);
                 m_d2dContext->FillRoundedRectangle(&progFg, m_purpleBrush.Get());
                 
                 // Formatting time
@@ -810,21 +810,21 @@ void OverlayWindow::Render() {
                 wchar_t remStr[16];
                 swprintf_s(remStr, L"-%d:%02d", remSec / 60, remSec % 60);
 
-                m_d2dContext->DrawTextW(posStr, (UINT32)wcslen(posStr), m_textFormatSmall.Get(), D2D1::RectF(left, bottom - 55, left + 60, bottom - 30), m_grayBrush.Get());
-                m_d2dContext->DrawTextW(remStr, (UINT32)wcslen(remStr), m_textFormatSmall.Get(), D2D1::RectF(right - 60, bottom - 55, right, bottom - 30), m_grayBrush.Get());
+                m_d2dContext->DrawTextW(posStr, (UINT32)wcslen(posStr), m_textFormatSmall.Get(), D2D1::RectF(left, bottom - 60, left + 60, bottom - 35), m_grayBrush.Get());
+                m_d2dContext->DrawTextW(remStr, (UINT32)wcslen(remStr), m_textFormatSmall.Get(), D2D1::RectF(right - 60, bottom - 60, right, bottom - 35), m_grayBrush.Get());
                 
                 // Draw Controls
-                m_btnPrev = D2D1::RectF(centerX - 50, bottom - 30, centerX - 26, bottom - 6);
-                m_btnPlayPause = D2D1::RectF(centerX - 18, bottom - 35, centerX + 18, bottom + 1);
-                m_btnNext = D2D1::RectF(centerX + 26, bottom - 30, centerX + 50, bottom - 6);
+                m_btnPrev = D2D1::RectF(centerX - 50, bottom - 35, centerX - 26, bottom - 11);
+                m_btnPlayPause = D2D1::RectF(centerX - 18, bottom - 40, centerX + 18, bottom - 4);
+                m_btnNext = D2D1::RectF(centerX + 26, bottom - 35, centerX + 50, bottom - 11);
 
-                D2D1_ELLIPSE playPauseCircle = D2D1::Ellipse(D2D1::Point2F(centerX, bottom - 17), 18.0f, 18.0f);
+                D2D1_ELLIPSE playPauseCircle = D2D1::Ellipse(D2D1::Point2F(centerX, bottom - 22), 18.0f, 18.0f);
                 m_d2dContext->FillEllipse(&playPauseCircle, m_bgDarkBrush.Get());
                 
-                D2D1_ELLIPSE prevCircle = D2D1::Ellipse(D2D1::Point2F(centerX - 38, bottom - 18), 12.0f, 12.0f);
+                D2D1_ELLIPSE prevCircle = D2D1::Ellipse(D2D1::Point2F(centerX - 38, bottom - 23), 12.0f, 12.0f);
                 m_d2dContext->FillEllipse(&prevCircle, m_bgDarkBrush.Get());
 
-                D2D1_ELLIPSE nextCircle = D2D1::Ellipse(D2D1::Point2F(centerX + 38, bottom - 18), 12.0f, 12.0f);
+                D2D1_ELLIPSE nextCircle = D2D1::Ellipse(D2D1::Point2F(centerX + 38, bottom - 23), 12.0f, 12.0f);
                 m_d2dContext->FillEllipse(&nextCircle, m_bgDarkBrush.Get());
                 
                 m_d2dContext->DrawTextW(L"\xE892", 1, m_iconFormat.Get(), m_btnPrev, m_purpleBrush.Get());

@@ -1,0 +1,175 @@
+[GDI+ Hook Window Class] GDI+ Window (TabTip.exe)
+[ShellHandwritingCanvas {18E91349-E229-4995-8049-7437243BBCC3}] Shell Handwriting Canvas
+[DynamicIslandClass] Dynamic Island
+[SystemTray_Main] Battery Meter
+[TopLevelWindowForOverflowXamlIsland] System tray overflow window.
+[Chrome_WidgetWin_1] Dynamic Island Windows De...
+[Chrome_WidgetWin_1] Spotify Free
+[GDI+ Hook Window Class] GDI+ Window (Spotify.exe)
+[GDI+ Hook Window Class] GDI+ Window (VCTIP.EXE)
+[.NET-BroadcastEventWindow.4.0.0.0.28f1359.0] .NET-BroadcastEventWindow.4.0.0.0.28f1359.0
+[Windows.UI.Core.CoreWindow] DesktopWindowXamlSource
+[Chrome_WidgetWin_1] General - Google Chrome
+[Windows.UI.Core.CoreWindow] DesktopWindowXamlSource
+[Chrome_WidgetWin_1] Windhawk
+[Windows.UI.Core.CoreWindow] DesktopWindowXamlSource
+[CabinetWClass] DynamicIsland - File Explorer
+[Chrome_WidgetWin_1] VSCodium
+[Qt51519QWindowIcon] Media viewer
+[Qt51519QWindowOwnDCIcon] TelegramDesktop
+[GDI+ Hook Window Class] GDI+ Window (Telegram.exe)
+[Qt51519TrayIconMessageWindowClass] QTrayIconMessageWindow
+[Qt51519QWindowIcon] TelegramDesktop
+[Qt51519QWindowIcon] TelegramDesktop
+[GDI+ Hook Window Class] GDI+ Window (Notepad.exe)
+[Windows.UI.Core.CoreWindow] DesktopWindowXamlSource
+[Windows.UI.Core.CoreWindow] Settings
+[ApplicationFrameWindow] Settings
+[H.NotifyIcon_74d57b63-1c58-4f88-8d43-d1173c7256e5] H.NotifyIcon_74d57b63-1c58-4f88-8d43-d1173c7256e5
+[GDI+ Hook Window Class] GDI+ Window (WhatsApp.Root.exe)
+[.NET-BroadcastEventWindow.3b95145.0] .NET-BroadcastEventWindow.3b95145.0
+[Windows.UI.Core.CoreWindow] DesktopWindowXamlSource
+[OleDdeWndClass] DDE Server Window
+[WinUIDesktopWin32WindowClass] WhatsApp
+[Qt51519QWindowIcon] ‎NemoTron – (3)
+[Notepad] Dynamic Island for Windows.txt - Notepad
+[WindowsForms10.Window.20808.app.0.1a0e24_r10_ad1] Language
+[COMTASKSWINDOWCLASS] Task Host Window
+[GDI+ Hook Window Class] GDI+ Window (Explorer.EXE)
+[OperationStatusWindow] Progress
+[WindowsForms10.Window.8.app.0.1a0e24_r10_ad1] OsdForm
+[Windows.UI.Core.CoreWindow] DesktopWindowXamlSource
+[SpotifyWidgetProvider] SpotifyWidgetProviderWindow
+[MediaPlayer SMTC window - {377B616D-49BD-4EAF-ACC6-B6E226B68523}] MediaPlayer SMTC window - {377B616D-49BD-4EAF-ACC6-B6E226B68523}
+[.NET-BroadcastEventWindow.4.0.0.0.1a0e24.0] .NET-BroadcastEventWindow.4.0.0.0.1a0e24.0
+[GDI+ Hook Window Class] GDI+ Window (FnKey.exe)
+[Windows.UI.Core.CoreWindow] Windows Input Experience
+[Nucleus Auth Window] Microsoft OneDrive Sync Service
+[RealtekAudioBackgroundProcessClass] RealtekAudioBackgroundProcessClass
+[SecHealth Window Class] SecurityHealthSystray
+[{5AEA657D-F3F5-4BD8-BFE9-A4B537FA24C3}] {5AEA657D-F3F5-4BD8-BFE9-A4B537FA24C3}
+[BroadcastListenerWindowThreadClass7300] BroadcastListenerWindow
+[BroadcastListenerWindowThreadClass15404] BroadcastListenerWindow
+[BroadcastListenerWindowThreadClass8740] BroadcastListenerWindow
+[CallBackWindowThread] CallBackWindowThread
+[CEF-OSC-WIDGET] NVIDIA GeForce Overlay DT
+[CEF-OSC-WIDGET] NVIDIA GeForce Overlay
+[UxdService] UxdService
+[UxdService] UxdService
+[MS_WebcheckMonitor] MS_WebcheckMonitor
+[BluetoothNotificationAreaIconWindowClass] BluetoothNotificationAreaIconWindowClass
+[MiracastConnectionWindow] MiracastConnectionWindow
+[NVSVC64.DLL] NvSvc
+[{1274D398-C3C8-422E-87DD-2FAFFD5A7F2F}] {1274D398-C3C8-422E-87DD-2FAFFD5A7F2F}
+[BroadcastListenerWindowThreadClass6740] BroadcastListenerWindow
+[{2A335767-FC94-417F-ABC4-B4122ADBEE60}] {2A335767-FC94-417F-ABC4-B4122ADBEE60}
+[CrossDeviceResumeWindowClass] CrossDeviceResumeWindow
+[PushNotificationsPowerManagement] Windows Push Notifications Platform
+[COMTASKSWINDOWCLASS] Task Host Window
+[NvContainerWindowClass0000407C] NvContainerWindowClass0000407C
+[NvContainerWindowClass00000FF0] NvContainerWindowClass00000FF0
+[NvContainerWindowClass000024D4] NvContainerWindowClass000024D4
+[NvContainerWindowClass00001724] NvContainerWindowClass00001724
+[Dwm] DWM Notification Window
+[WindowsForms10.Window.8.app.0.1a0e24_r10_ad1] FnKey
+[Chrome_WidgetWin_1] WhatsApp
+[Progman] Program Manager
+[IME] Default IME
+[IME] Default IME
+[MSCTFIME UI] MSCTFIME UI
+[MSCTFIME UI] MSCTFIME UI
+[IME] Default IME
+[MSCTFIME UI] MSCTFIME UI
+[IME] Default IME
+[IME] Default IME
+[MSCTFIME UI] MSCTFIME UI
+[IME] Default IME
+[MSCTFIME UI] MSCTFIME UI
+[IME] Default IME
+[IME] Default IME
+[IME] Default IME
+[IME] Default IME
+[MSCTFIME UI] MSCTFIME UI
+[IME] Default IME
+[IME] Default IME
+[IME] Default IME
+[IME] Default IME
+[MSCTFIME UI] MSCTFIME UI
+[IME] Default IME
+[IME] Default IME
+[IME] Default IME
+[IME] Default IME
+[IME] Default IME
+[MSCTFIME UI] MSCTFIME UI
+[IME] Default IME
+[MSCTFIME UI] MSCTFIME UI
+[IME] Default IME
+[IME] Default IME
+[IME] Default IME
+[IME] Default IME
+[IME] Default IME
+[MSCTFIME UI] MSCTFIME UI
+[IME] Default IME
+[IME] Default IME
+[IME] Default IME
+[IME] Default IME
+[IME] Default IME
+[IME] Default IME
+[IME] Default IME
+[IME] Default IME
+[IME] Default IME
+[IME] Default IME
+[MSCTFIME UI] MSCTFIME UI
+[IME] Default IME
+[IME] Default IME
+[IME] Default IME
+[IME] Default IME
+[IME] Default IME
+[IME] Default IME
+[IME] Default IME
+[MSCTFIME UI] MSCTFIME UI
+[IME] Default IME
+[MSCTFIME UI] MSCTFIME UI
+[IME] Default IME
+[MSCTFIME UI] MSCTFIME UI
+[IME] Default IME
+[MSCTFIME UI] MSCTFIME UI
+[IME] Default IME
+[MSCTFIME UI] MSCTFIME UI
+[IME] Default IME
+[MSCTFIME UI] MSCTFIME UI
+[IME] Default IME
+[IME] Default IME
+[IME] Default IME
+[IME] Default IME
+[MSCTFIME UI] MSCTFIME UI
+[IME] Default IME
+[IME] Default IME
+[IME] Default IME
+[IME] Default IME
+[IME] Default IME
+[IME] Default IME
+[IME] Default IME
+[IME] Default IME
+[IME] Default IME
+[IME] Default IME
+[IME] Default IME
+[IME] Default IME
+[IME] Default IME
+[IME] Default IME
+[IME] Default IME
+[MSCTFIME UI] MSCTFIME UI
+[IME] Default IME
+[IME] Default IME
+[IME] Default IME
+[IME] Default IME
+[IME] Default IME
+[IME] Default IME
+[IME] Default IME
+[IME] Default IME
+[IME] Default IME
+[IME] Default IME
+[IME] Default IME
+[IME] Default IME
+[IME] Default IME
+[IME] Default IME

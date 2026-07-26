@@ -1,0 +1,7 @@
+*.obj
+*.exe
+*.log
+debug_log.txt
+.vs/
+*.pdb
+*.ilk

@@ -8,9 +8,17 @@
 #include <winrt/Windows.Storage.Streams.h>
 #include <windows.storage.streams.h>
 #include <shcore.h>
+#include <shellapi.h>
+#include <dwmapi.h>
+#include <mmdeviceapi.h>
+#include <endpointvolume.h>
+#include <comdef.h>
+#include <Wbemidl.h>
 
 #pragma comment(lib, "windowsapp.lib")
 #pragma comment(lib, "shcore.lib")
+#pragma comment(lib, "shell32.lib")
+#pragma comment(lib, "dwmapi.lib")
 
 using namespace winrt;
 using namespace winrt::Windows::Media::Control;
@@ -21,7 +29,8 @@ OverlayWindow::OverlayWindow() : m_hwnd(NULL),
     m_isHovered(false), m_isExpanded(false),
     m_viewMode(0), m_stopWeatherThread(false), m_scale(1.0f), m_weatherThread(NULL), m_mediaTicks(0), m_mediaThread(NULL),
     m_mediaPosition(0), m_mediaDuration(0), m_mediaLastUpdated(0), m_isPlaying(false), m_mediaThumbnailChanged(false),
-    m_hardwareThread(NULL), m_stopHardwareThread(false), m_hwFps(120), m_hwCpu(0), m_hwGpu(0), m_hwRam(0), m_hwDisk(0) {
+    m_hardwareThread(NULL), m_stopHardwareThread(false), m_hwFps(120), m_hwCpu(0), m_hwGpu(0), m_hwRam(0), m_hwDisk(0),
+    m_volumeLevel(0.5f), m_brightnessLevel(0.5f), m_isDraggingVolume(false), m_isDraggingBrightness(false) {
     wcscpy_s(m_weatherRegion, L"London");
     wcscpy_s(m_weatherTemp, L"--");
     wcscpy_s(m_weatherDetails, L"Loading...");
@@ -75,6 +84,9 @@ bool OverlayWindow::Create(HINSTANCE hInstance) {
 
     SetWindowPos(m_hwnd, HWND_TOPMOST, x, y, hwndWidth, hwndHeight, SWP_NOZORDER | SWP_NOACTIVATE);
     SetLayeredWindowAttributes(m_hwnd, 0, 255, LWA_ALPHA);
+    
+    DWORD policy = DWMNCRP_DISABLED;
+    DwmSetWindowAttribute(m_hwnd, DWMWA_NCRENDERING_POLICY, &policy, sizeof(policy));
 
     if (!InitializeDirectX()) return false;
 
@@ -95,6 +107,17 @@ bool OverlayWindow::Create(HINSTANCE hInstance) {
     
     ShowWindow(m_hwnd, SW_SHOW);
     SetTimer(m_hwnd, 1, 8, NULL); 
+
+    NOTIFYICONDATA nid = {};
+    nid.cbSize = sizeof(NOTIFYICONDATA);
+    nid.hWnd = m_hwnd;
+    nid.uID = 1;
+    nid.uFlags = NIF_ICON | NIF_MESSAGE | NIF_TIP;
+    nid.uCallbackMessage = WM_USER + 1; // WM_TRAYICON
+    nid.hIcon = LoadIcon(NULL, IDI_APPLICATION);
+    wcscpy_s(nid.szTip, L"Dynamic Island");
+    Shell_NotifyIcon(NIM_ADD, &nid);
+
     return true;
 }
 
@@ -334,7 +357,28 @@ LRESULT OverlayWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam) {
                     case 1: m_targetWidth = 340.0f; m_targetHeight = 180.0f; break;
                     case 2: m_targetWidth = 340.0f; m_targetHeight = 140.0f; break;
                     case 3: m_targetWidth = 380.0f; m_targetHeight = 46.0f; break;
+                    case 4: m_targetWidth = 340.0f; m_targetHeight = 140.0f; break;
                 }
+            }
+        }
+        
+        if (m_isDraggingBrightness || m_isDraggingVolume) {
+            POINT pt;
+            pt.x = GET_X_LPARAM(lParam);
+            float logicalX = pt.x / m_scale;
+            float centerX = 500.0f / 2.0f;
+            float left = centerX - (m_currentWidth / 2.0f);
+            float right = centerX + (m_currentWidth / 2.0f);
+            float barLeft = left + 50.0f;
+            float barRight = right - 20.0f;
+            float progress = (logicalX - barLeft) / (barRight - barLeft);
+            if (progress < 0.0f) progress = 0.0f;
+            if (progress > 1.0f) progress = 1.0f;
+            
+            if (m_isDraggingBrightness) {
+                m_brightnessLevel = progress;
+            } else if (m_isDraggingVolume) {
+                SetSystemVolume(progress);
             }
         }
         return 0;
@@ -398,6 +442,52 @@ LRESULT OverlayWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam) {
             
             
             if (clickedControl) return 0;
+        } else if (m_isExpanded && m_viewMode == 4) {
+            float barTopB = 30.0f;
+            float barBottomB = 60.0f;
+            float barTopV = 80.0f;
+            float barBottomV = 110.0f;
+            
+            if (logicalY >= barTopB && logicalY <= barBottomB) {
+                m_isDraggingBrightness = true;
+                SetCapture(m_hwnd);
+                
+                float centerX = 500.0f / 2.0f;
+                float left = centerX - (m_currentWidth / 2.0f);
+                float right = centerX + (m_currentWidth / 2.0f);
+                float barLeft = left + 50.0f;
+                float barRight = right - 20.0f;
+                float progress = (logicalX - barLeft) / (barRight - barLeft);
+                if (progress < 0.0f) progress = 0.0f;
+                if (progress > 1.0f) progress = 1.0f;
+                m_brightnessLevel = progress;
+            }
+            else if (logicalY >= barTopV && logicalY <= barBottomV) {
+                m_isDraggingVolume = true;
+                SetCapture(m_hwnd);
+                
+                float centerX = 500.0f / 2.0f;
+                float left = centerX - (m_currentWidth / 2.0f);
+                float right = centerX + (m_currentWidth / 2.0f);
+                float barLeft = left + 50.0f;
+                float barRight = right - 20.0f;
+                float progress = (logicalX - barLeft) / (barRight - barLeft);
+                if (progress < 0.0f) progress = 0.0f;
+                if (progress > 1.0f) progress = 1.0f;
+                SetSystemVolume(progress);
+            }
+        }
+        return 0;
+    }
+
+    case WM_LBUTTONUP: {
+        if (m_isDraggingBrightness || m_isDraggingVolume) {
+            ReleaseCapture();
+            if (m_isDraggingBrightness) {
+                SetSystemBrightness(m_brightnessLevel);
+            }
+            m_isDraggingBrightness = false;
+            m_isDraggingVolume = false;
         }
         return 0;
     }
@@ -411,15 +501,20 @@ LRESULT OverlayWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam) {
         if (m_isExpanded) {
             int delta = GET_WHEEL_DELTA_WPARAM(wParam);
             if (delta > 0) {
-                m_viewMode = (m_viewMode + 1) % 4;
+                m_viewMode = (m_viewMode + 1) % 5;
             } else {
-                m_viewMode = (m_viewMode - 1 + 4) % 4;
+                m_viewMode = (m_viewMode - 1 + 5) % 5;
             }
             switch (m_viewMode) {
                 case 0: m_targetWidth = 340.0f; m_targetHeight = 140.0f; break;
                 case 1: m_targetWidth = 340.0f; m_targetHeight = 180.0f; break;
                 case 2: m_targetWidth = 340.0f; m_targetHeight = 140.0f; break;
                 case 3: m_targetWidth = 380.0f; m_targetHeight = 46.0f; break;
+                case 4: 
+                    m_targetWidth = 340.0f; m_targetHeight = 140.0f; 
+                    GetSystemVolume();
+                    GetSystemBrightness();
+                    break;
             }
         }
         return 0;
@@ -438,9 +533,31 @@ LRESULT OverlayWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam) {
         return 0;
     }
 
-    case WM_DESTROY:
+    case WM_USER + 1: { // WM_TRAYICON
+        if (lParam == WM_RBUTTONUP) {
+            POINT pt;
+            GetCursorPos(&pt);
+            HMENU hMenu = CreatePopupMenu();
+            AppendMenu(hMenu, MF_STRING, 1001, L"Exit");
+            SetForegroundWindow(m_hwnd);
+            int cmd = TrackPopupMenu(hMenu, TPM_RETURNCMD | TPM_NONOTIFY, pt.x, pt.y, 0, m_hwnd, NULL);
+            DestroyMenu(hMenu);
+            if (cmd == 1001) {
+                DestroyWindow(m_hwnd);
+            }
+        }
+        return 0;
+    }
+
+    case WM_DESTROY: {
+        NOTIFYICONDATA nid = {};
+        nid.cbSize = sizeof(NOTIFYICONDATA);
+        nid.hWnd = m_hwnd;
+        nid.uID = 1;
+        Shell_NotifyIcon(NIM_DELETE, &nid);
         PostQuitMessage(0);
         return 0;
+    }
     }
     return DefWindowProc(m_hwnd, uMsg, wParam, lParam);
 }
@@ -606,14 +723,16 @@ void OverlayWindow::Render() {
     float radius = m_currentHeight > 50.0f ? 35.0f : m_currentHeight / 2.0f;
 
     static RECT s_lastRgn = {0, 0, 0, 0};
-    int rLeft = (int)(left * m_scale);
-    int rTop = (int)(topY * m_scale);
-    int rRight = (int)(right * m_scale);
-    int rBottom = (int)(bottom * m_scale);
+    int padding = (int)(4 * m_scale);
+    if (padding < 4) padding = 4; // ensure at least 4 pixels padding
+    int rLeft = (int)(left * m_scale) - padding;
+    int rTop = (int)(topY * m_scale) - padding;
+    int rRight = (int)(right * m_scale) + padding;
+    int rBottom = (int)(bottom * m_scale) + padding;
     if (s_lastRgn.left != rLeft || s_lastRgn.right != rRight || s_lastRgn.bottom != rBottom) {
         s_lastRgn = {rLeft, rTop, rRight, rBottom};
-        HRGN hRgn = CreateRoundRectRgn(rLeft, rTop, rRight, rBottom, (int)(radius * 2 * m_scale), (int)(radius * 2 * m_scale));
-        SetWindowRgn(m_hwnd, hRgn, FALSE);
+        HRGN hRgn = CreateRoundRectRgn(rLeft, rTop, rRight, rBottom, (int)((radius + padding) * 2 * m_scale), (int)((radius + padding) * 2 * m_scale));
+        SetWindowRgn(m_hwnd, hRgn, TRUE);
     }
 
     
@@ -761,6 +880,35 @@ void OverlayWindow::Render() {
                     m_d2dContext->FillRectangle(D2D1::RectF(bx + 15, bottom - 10, bx + boxW - 15, bottom - 8), metrics[i].color);
                 }
             }
+            else if (m_viewMode == 4) { // Control Center
+                // Brightness Slider
+                float barTopB = 30.0f;
+                float barBottomB = 60.0f;
+                float barLeft = left + 50.0f;
+                float barRight = right - 20.0f;
+                
+                m_d2dContext->DrawTextW(L"\xE706", 1, m_iconFormatLarge.Get(), D2D1::RectF(left + 10, barTopB, barLeft, barBottomB), m_textBrush.Get());
+                
+                D2D1_ROUNDED_RECT bbg = D2D1::RoundedRect(D2D1::RectF(barLeft, barTopB + 10, barRight, barBottomB - 10), 5.0f, 5.0f);
+                m_d2dContext->FillRoundedRectangle(&bbg, m_bgDarkBrush.Get());
+                
+                float bWidth = (barRight - barLeft) * m_brightnessLevel;
+                D2D1_ROUNDED_RECT bfg = D2D1::RoundedRect(D2D1::RectF(barLeft, barTopB + 10, barLeft + bWidth, barBottomB - 10), 5.0f, 5.0f);
+                m_d2dContext->FillRoundedRectangle(&bfg, m_textBrush.Get());
+                
+                // Volume Slider
+                float barTopV = 80.0f;
+                float barBottomV = 110.0f;
+                
+                m_d2dContext->DrawTextW(L"\xE767", 1, m_iconFormatLarge.Get(), D2D1::RectF(left + 10, barTopV, barLeft, barBottomV), m_textBrush.Get());
+                
+                D2D1_ROUNDED_RECT vbg = D2D1::RoundedRect(D2D1::RectF(barLeft, barTopV + 10, barRight, barBottomV - 10), 5.0f, 5.0f);
+                m_d2dContext->FillRoundedRectangle(&vbg, m_bgDarkBrush.Get());
+                
+                float vWidth = (barRight - barLeft) * m_volumeLevel;
+                D2D1_ROUNDED_RECT vfg = D2D1::RoundedRect(D2D1::RectF(barLeft, barTopV + 10, barLeft + vWidth, barBottomV - 10), 5.0f, 5.0f);
+                m_d2dContext->FillRoundedRectangle(&vfg, m_textBrush.Get());
+            }
         }
     } else {
         // IDLE VIEW (Mini pill)
@@ -785,4 +933,96 @@ void OverlayWindow::Render() {
     m_d2dContext->EndDraw();
     DXGI_PRESENT_PARAMETERS parameters = {};
     m_swapChain->Present1(1, 0, &parameters);
+}
+
+void OverlayWindow::SetSystemVolume(float level) {
+    if (level < 0.0f) level = 0.0f;
+    if (level > 1.0f) level = 1.0f;
+    m_volumeLevel = level;
+    
+    IMMDeviceEnumerator* deviceEnumerator = NULL;
+    if (SUCCEEDED(CoCreateInstance(__uuidof(MMDeviceEnumerator), NULL, CLSCTX_INPROC_SERVER, __uuidof(IMMDeviceEnumerator), (LPVOID*)&deviceEnumerator))) {
+        IMMDevice* defaultDevice = NULL;
+        if (SUCCEEDED(deviceEnumerator->GetDefaultAudioEndpoint(eRender, eConsole, &defaultDevice))) {
+            IAudioEndpointVolume* endpointVolume = NULL;
+            if (SUCCEEDED(defaultDevice->Activate(__uuidof(IAudioEndpointVolume), CLSCTX_INPROC_SERVER, NULL, (LPVOID*)&endpointVolume))) {
+                endpointVolume->SetMasterVolumeLevelScalar(level, NULL);
+                endpointVolume->Release();
+            }
+            defaultDevice->Release();
+        }
+        deviceEnumerator->Release();
+    }
+}
+
+float OverlayWindow::GetSystemVolume() {
+    float level = m_volumeLevel;
+    IMMDeviceEnumerator* deviceEnumerator = NULL;
+    if (SUCCEEDED(CoCreateInstance(__uuidof(MMDeviceEnumerator), NULL, CLSCTX_INPROC_SERVER, __uuidof(IMMDeviceEnumerator), (LPVOID*)&deviceEnumerator))) {
+        IMMDevice* defaultDevice = NULL;
+        if (SUCCEEDED(deviceEnumerator->GetDefaultAudioEndpoint(eRender, eConsole, &defaultDevice))) {
+            IAudioEndpointVolume* endpointVolume = NULL;
+            if (SUCCEEDED(defaultDevice->Activate(__uuidof(IAudioEndpointVolume), CLSCTX_INPROC_SERVER, NULL, (LPVOID*)&endpointVolume))) {
+                endpointVolume->GetMasterVolumeLevelScalar(&level);
+                endpointVolume->Release();
+            }
+            defaultDevice->Release();
+        }
+        deviceEnumerator->Release();
+    }
+    m_volumeLevel = level;
+    return level;
+}
+
+void OverlayWindow::SetSystemBrightness(float level) {
+    if (level < 0.0f) level = 0.0f;
+    if (level > 1.0f) level = 1.0f;
+    m_brightnessLevel = level;
+    
+    int brightness = (int)(level * 100.0f);
+    
+    wchar_t cmd[512];
+    swprintf_s(cmd, L"powershell.exe -WindowStyle Hidden -Command \"Get-CimInstance -Namespace root/WMI -ClassName WmiMonitorBrightnessMethods | Invoke-CimMethod -MethodName WmiSetBrightness -Arguments @{Timeout=[uint32]1; Brightness=[byte]%d}\"", brightness);
+    
+    STARTUPINFO si = { sizeof(si) };
+    si.dwFlags = STARTF_USESHOWWINDOW;
+    si.wShowWindow = SW_HIDE;
+    PROCESS_INFORMATION pi;
+    if (CreateProcess(NULL, cmd, NULL, NULL, FALSE, CREATE_NO_WINDOW, NULL, NULL, &si, &pi)) {
+        CloseHandle(pi.hProcess);
+        CloseHandle(pi.hThread);
+    }
+}
+
+float OverlayWindow::GetSystemBrightness() {
+    float level = m_brightnessLevel;
+    IWbemLocator* pLoc = NULL;
+    if (FAILED(CoCreateInstance(CLSID_WbemLocator, 0, CLSCTX_INPROC_SERVER, IID_IWbemLocator, (LPVOID*)&pLoc))) return level;
+    
+    IWbemServices* pSvc = NULL;
+    if (FAILED(pLoc->ConnectServer(_bstr_t(L"ROOT\\WMI"), NULL, NULL, 0, NULL, 0, 0, &pSvc))) { pLoc->Release(); return level; }
+    
+    CoSetProxyBlanket(pSvc, RPC_C_AUTHN_WINNT, RPC_C_AUTHZ_NONE, NULL, RPC_C_AUTHN_LEVEL_CALL, RPC_C_IMP_LEVEL_IMPERSONATE, NULL, EOAC_NONE);
+    
+    IEnumWbemClassObject* pEnumerator = NULL;
+    if (SUCCEEDED(pSvc->ExecQuery(_bstr_t("WQL"), _bstr_t("SELECT CurrentBrightness FROM WmiMonitorBrightness"), WBEM_FLAG_FORWARD_ONLY | WBEM_FLAG_RETURN_IMMEDIATELY, NULL, &pEnumerator))) {
+        IWbemClassObject* pclsObj = NULL;
+        ULONG uReturn = 0;
+        if (pEnumerator->Next(WBEM_INFINITE, 1, &pclsObj, &uReturn) == 0 && uReturn > 0) {
+            VARIANT vtProp;
+            if (SUCCEEDED(pclsObj->Get(L"CurrentBrightness", 0, &vtProp, 0, 0))) {
+                if (vtProp.vt == VT_UI1) {
+                    level = vtProp.bVal / 100.0f;
+                }
+                VariantClear(&vtProp);
+            }
+            pclsObj->Release();
+        }
+        pEnumerator->Release();
+    }
+    pSvc->Release();
+    pLoc->Release();
+    
+    m_brightnessLevel = level;
+    return level;
 }

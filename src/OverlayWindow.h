@@ -104,8 +104,10 @@ private:
     int64_t m_mediaDuration;
     int64_t m_mediaLastUpdated;
     bool m_isPlaying;
+
+    static DWORD WINAPI MediaThreadProc(LPVOID lpParam);
     
-    // Hardware Overlay
+    // Hardware Info
     HANDLE m_hardwareThread;
     bool m_stopHardwareThread;
     int m_hwFps;
@@ -114,10 +116,18 @@ private:
     int m_hwRam;
     int m_hwDisk;
     
+    // Control Center
+    float m_volumeLevel;
+    float m_brightnessLevel;
+    bool m_isDraggingVolume;
+    bool m_isDraggingBrightness;
+    void SetSystemVolume(float level);
+    float GetSystemVolume();
+    void SetSystemBrightness(float level);
+    float GetSystemBrightness();
+    
     // Hit Testing
     D2D1_RECT_F m_btnPrev;
     D2D1_RECT_F m_btnPlayPause;
     D2D1_RECT_F m_btnNext;
-    
-    static DWORD WINAPI MediaThreadProc(LPVOID lpParam);
 };

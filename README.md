@@ -5,35 +5,29 @@ A sleek, modern, and highly interactive Dynamic Island overlay for Windows. Buil
 ## ✨ Features
 
 ### 💤 Idle Condition
-When not interacted with, the Dynamic Island elegantly shrinks into a sleek pill shape. It remains entirely click-through, ensuring it never interrupts your workflow.!
-[Idle Condition](assets/idle.png)
+When not interacted with, the Dynamic Island elegantly shrinks into a sleek pill shape. It remains entirely click-through, ensuring it never interrupts your workflow.![Idle Condition](assets/idle.png)
 
 The Dynamic Island features 5 powerful interactive views that you can scroll through using your mouse wheel while hovering over it:
 
 ### 🎵 Media Player
 Displays your currently playing media, artist name, album art (via system transport controls), and a live progress bar. Includes playback controls (Previous, Play/Pause, Next) and allows scrubbing through the timeline.
-!
-[Media Player](assets/media.png)
+![Media Player](assets/media.png)
 
 ### 📅 Calendar & Date
 A clean and minimalistic view of the current date and a dynamic monthly calendar.
-!
-[Calendar](assets/calendar.png)
+![Calendar](assets/calendar.png)
 
 ### ⛅ Weather Widget
 Fetches real-time weather information (temperature, wind speed, and humidity) for your current location using the open-meteo API.
-!
-[Weather](assets/weather.png)
+![Weather](assets/weather.png)
 
 ### 💻 Game Overlay
 Keep an eye on your system's performance while Gaming showing real-time CPU, RAM, and Disk usage percentages tailored for Gamers.
-!
-[Hardware](assets/hardware.png)
+![Hardware](assets/hardware.png)
 
 ### 🎛️ Control Center
 Adjust your system volume and screen brightness instantly! Simply drag the smooth sliders and the changes are applied seamlessly.
-!
-[Control Center](assets/control.png)
+![Control Center](assets/control.png)
 
 ## 🚀 Additional Features
 - **Global Hotkey:** Instantly show or hide the island from anywhere using `Ctrl + Alt + D`.

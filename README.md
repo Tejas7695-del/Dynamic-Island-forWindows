@@ -4,6 +4,10 @@ A sleek, modern, and highly interactive Dynamic Island overlay for Windows. Buil
 
 ## ✨ Features
 
+### 💤 Idle Condition
+When not interacted with, the Dynamic Island elegantly shrinks into a sleek pill shape. It remains entirely click-through, ensuring it never interrupts your workflow.
+![Idle Condition](assets/idle.png)
+
 The Dynamic Island features 5 powerful interactive views that you can scroll through using your mouse wheel while hovering over it:
 
 ### 🎵 Media Player
